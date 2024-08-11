@@ -39,7 +39,6 @@ const { Header, Content, Footer, Sider } = Layout;
 //   },
 // ];
 const MainLayout = () => {
-  
   const dispatch = useAppDispatch();
   const handleLogout = () => {
     dispatch(logout());
@@ -50,7 +49,7 @@ const MainLayout = () => {
       <Layout>
         <Header>
           {" "}
-          <Button onClick={handleLogout()}></Button>
+          <Button onClick={handleLogout}>Logout</Button>
         </Header>
         <Content style={{ margin: "24px 16px 0" }}>
           <div
