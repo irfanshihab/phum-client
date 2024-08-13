@@ -39,6 +39,7 @@ const Sidebar = () => {
       onBreakpoint={(broken) => {
         console.log(broken);
       }}
+      style={{ height: "100vh", position: "sticky", top: "0", left: "0" }}
       onCollapse={(collapsed, type) => {
         console.log(collapsed, type);
       }}
