@@ -1,7 +1,8 @@
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
-import { Table, type TableColumnsType, type TableProps } from "antd";
+import { Button, Table, type TableColumnsType, type TableProps } from "antd";
 import { TAcademicSemester } from "../../../types/academicManagement.types";
 import { useState } from "react";
+import { TQueryParam } from "../../../types";
 
 export type TTableData = Pick<
   TAcademicSemester,
@@ -9,8 +10,13 @@ export type TTableData = Pick<
 >;
 
 const AcademicSemester = () => {
-  const [params, setParams] = useState([]);
-  const { data: semesterData } = useGetAllSemestersQuery(params);
+  // const [params, setParams] = useState<TQueryParam[]> | undefined(undefined);
+  const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
+  const {
+    data: semesterData,
+    isLoading,
+    isFetching,
+  } = useGetAllSemestersQuery(params);
   console.log(semesterData);
 
   const tableData = semesterData?.data?.map(
@@ -69,6 +75,18 @@ const AcademicSemester = () => {
       title: "End Month",
       dataIndex: "endMonth",
     },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "endMonth",
+      render: () => {
+        return (
+          <div>
+            <Button>Update</Button>
+          </div>
+        );
+      },
+    },
   ];
 
   // const data = [
@@ -105,7 +123,7 @@ const AcademicSemester = () => {
   ) => {
     console.log("params", { filters, extra });
     if (extra.action == "filter") {
-      const queryParams = [];
+      const queryParams: TQueryParam[] = [];
       filters.name?.forEach((item) =>
         queryParams.push({ name: "name", value: item })
       );
@@ -115,8 +133,12 @@ const AcademicSemester = () => {
       setParams(queryParams);
     }
   };
+  if (isLoading) {
+    return <p className="text-green-500">Loading data.....</p>;
+  }
   return (
     <Table
+      loading={isFetching}
       columns={columns}
       dataSource={tableData}
       onChange={onChange}
