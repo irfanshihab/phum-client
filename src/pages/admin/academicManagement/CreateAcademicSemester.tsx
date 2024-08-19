@@ -1,7 +1,7 @@
 import React from "react";
 import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, FeildValues } from "react-hook-form";
 import { Button, Col, Flex } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
 import { semesterOptions } from "../../../constants/semester";
