@@ -1,5 +1,4 @@
 import {
-  TAcademicSemester,
   TCourse,
   TQueryParam,
   TResponseRedux,
@@ -33,6 +32,30 @@ const courseManagementapi = baseApi.injectEndpoints({
         };
       },
     }),
+    getAllCourses: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item: TQueryParam) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+
+        return {
+          url: "/courses",
+          method: "GET",
+          params: params,
+        };
+      },
+      providesTags: ["courses"],
+      transformResponse: (response: TResponseRedux<TCourse[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
     addRegisteredSemester: builder.mutation({
       query: (data) => ({
         url: "/semester-registrations/create-semester-registration",
@@ -48,6 +71,30 @@ const courseManagementapi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["semester"],
     }),
+    addCourse: builder.mutation({
+      query: (data) => ({
+        url: `/courses/create-course`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["courses"],
+    }),
+    addFaculties: builder.mutation({
+      query: (args) => ({
+        url: `/courses/${args.courseId}/assign-faculties`,
+        method: "PUT",
+        body: args.data,
+      }),
+      invalidatesTags: ["courses"],
+    }),
+    createOfferedCourse: builder.mutation({
+      query: (data) => ({
+        url: `offered-courses/create-offered-course`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["courses"],
+    }),
   }), //this end of endpoinst
 });
 
@@ -55,4 +102,8 @@ export const {
   useAddRegisteredSemesterMutation,
   useGetAllRegisteredSemestersQuery,
   useUpdateRegisteredSemesterMutation,
+  useGetAllCoursesQuery,
+  useAddCourseMutation,
+  useAddFacultiesMutation,
+  useCreateOfferedCourseMutation,
 } = courseManagementapi;
