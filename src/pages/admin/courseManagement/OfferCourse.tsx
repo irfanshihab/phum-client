@@ -2,10 +2,8 @@ import { Button, Col, Flex } from "antd";
 import PHForm from "../../../components/form/PHForm";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import PHSelect from "../../../components/form/PHSelect";
-
 import { useState } from "react";
 import PHInput from "../../../components/form/PHInput";
-
 import moment from "moment";
 import {
   useCreateOfferedCourseMutation,
@@ -26,27 +24,28 @@ const OfferCourse = () => {
 
   const [addOfferedCourse] = useCreateOfferedCourseMutation();
 
-  // const { data: semesterRegistrationData } = useGetAllRegisteredSemestersQuery([
-  //   { name: "sort", value: "year" },
-  //   { name: "status", value: "UPCOMING" },
-  // ]);
+  const { data: semesterRegistrationData } = useGetAllRegisteredSemestersQuery([
+    { name: "sort", value: "year" },
+    { name: "status", value: "ONGOING" },
+  ]);
 
   const { data: academicFacultyData } = useGetAcademicFacultiesQuery(undefined);
 
   const { data: academicDepartmentData } =
     useGetAcademicDepartmentsQuery(undefined);
 
-  // const { data: coursesData } = useGetAllCoursesQuery(undefined);
+  const { data: coursesData } = useGetAllCoursesQuery(undefined);
 
-  // const { data: facultiesData, isFetching: fetchingFaculties } =
-  //   useGetCourseFacultiesQuery(courseId, { skip: !courseId });
-
-  // const semesterRegistrationOptions = semesterRegistrationData?.data?.map(
-  //   (item) => ({
-  //     value: item._id,
-  //     label: `${item.academicSemester.name} ${item.academicSemester.year}`,
-  //   })
-  // );
+  const { data: facultiesData, isFetching: fetchingFaculties } =
+    useGetCourseFacultiesQuery(courseId, { skip: !courseId });
+  console.log(facultiesData);
+  const semesterRegistrationOptions = semesterRegistrationData?.data?.map(
+    (item) => ({
+      value: item._id,
+      label: `${item.academicSemester.name} ${item.academicSemester.year}`,
+    })
+  );
+  console.log(semesterRegistrationData);
 
   const academicFacultyOptions = academicFacultyData?.data?.map((item) => ({
     value: item._id,
@@ -60,15 +59,15 @@ const OfferCourse = () => {
     })
   );
 
-  // const courseOptions = coursesData?.data?.map((item) => ({
-  //   value: item._id,
-  //   label: item.title,
-  // }));
+  const courseOptions = coursesData?.data?.map((item) => ({
+    value: item._id,
+    label: item.title,
+  }));
 
-  // const facultiesOptions = facultiesData?.data?.faculties?.map((item) => ({
-  //   value: item._id,
-  //   label: item.fullName,
-  // }));
+  const facultiesOptions = facultiesData?.data?.faculties?.map((item) => ({
+    value: item._id,
+    label: item.fullName,
+  }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const offeredCourseData = {
@@ -87,11 +86,11 @@ const OfferCourse = () => {
     <Flex justify="center" align="center">
       <Col span={6}>
         <PHForm onSubmit={onSubmit}>
-          {/* <PHSelect
+          <PHSelect
             name="semesterRegistration"
             label="Semester Registrations"
             options={semesterRegistrationOptions}
-          /> */}
+          />
           <PHSelect
             name="academicFaculty"
             label="Academic Faculty"
@@ -102,7 +101,7 @@ const OfferCourse = () => {
             label="Academic Department"
             options={academicDepartmentOptions}
           />
-          {/* <PHSelectWithWatch
+          <PHSelectWithWatch
             onValueChange={setCourseId}
             options={courseOptions}
             name="course"
@@ -113,7 +112,7 @@ const OfferCourse = () => {
             name="faculty"
             label="Faculty"
             options={facultiesOptions}
-          /> */}
+          />
           <PHInput type="text" name="section" label="Section" />
           <PHInput type="text" name="maxCapacity" label="Max Capacity" />
           <PHSelect

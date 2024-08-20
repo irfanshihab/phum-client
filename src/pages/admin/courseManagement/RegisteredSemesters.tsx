@@ -28,7 +28,7 @@ const RegisteredSemesters = () => {
   const [semesterId, setSemesterId] = useState("");
   const { data: semesterData, isFetching } =
     useGetAllRegisteredSemestersQuery(undefined);
-  console.log("semester", semesterData);
+
   const [updateSemesterStatus] = useUpdateRegisteredSemesterMutation();
 
   console.log(semesterId);
@@ -36,7 +36,7 @@ const RegisteredSemesters = () => {
   const tableData = semesterData?.data?.map(
     ({ _id, academicSemester, startDate, endDate, status }) => ({
       key: _id,
-      name: `${academicSemester?.name} ${academicSemester?.year}`,
+      name: `${academicSemester.name} ${academicSemester.year}`,
       startDate: moment(new Date(startDate)).format("MMMM"),
       endDate: moment(new Date(endDate)).format("MMMM"),
       status,

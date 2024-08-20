@@ -7,7 +7,7 @@ type TInpurProps = {
   label?: string;
   disabled?: boolean;
 };
-const PHInput = ({ type, name, label }: TInpurProps) => {
+const PHInput = ({ type, name, label, disabled }: TInpurProps) => {
   return (
     <div style={{ marginBottom: "20px" }}>
       {/* {label ? label : null} */}

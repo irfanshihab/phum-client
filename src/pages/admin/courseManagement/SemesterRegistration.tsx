@@ -1,7 +1,7 @@
 import React from "react";
 import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
-import { SubmitHandler, FeildValues } from "react-hook-form";
+import { SubmitHandler, FieldValues } from "react-hook-form";
 import { Button, Col, Flex } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
 import { semesterStatusOptions } from "../../../constants/semester";
@@ -14,36 +14,35 @@ import { useAddRegisteredSemesterMutation } from "../../../redux/features/admin/
 const SemesterRegistration = () => {
   const [addSemester] = useAddRegisteredSemesterMutation();
   const { data: academicSemester } = useGetAllSemestersQuery([
-    {
-      name: "sort",
-      value: "year",
-    },
+    { name: "sort", value: "year" },
   ]);
 
   const academicSemesterOptions = academicSemester?.data?.map((item) => ({
     value: item._id,
-    label: `${item.name}${item.year}`,
+    label: `${item.name} ${item.year}`,
   }));
-  const onSubmit: SubmitHandler<FeildValues> = async (data) => {
-    console.log(data);
-    const toastId = toast.loading("creating.....");
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Creating...");
 
     const semesterData = {
       ...data,
       minCredit: Number(data.minCredit),
       maxCredit: Number(data.maxCredit),
     };
+
     console.log(semesterData);
+
     try {
       const res = (await addSemester(semesterData)) as TResponse<any>;
       console.log(res);
       if (res.error) {
         toast.error(res.error.data.message, { id: toastId });
       } else {
-        toast.success("semester create osthirlevel vabhe", { id: toastId });
+        toast.success("Semester created", { id: toastId });
       }
     } catch (err) {
-      toast.error("error here something went wrong", { id: toastId });
+      toast.error("Something went wrong", { id: toastId });
     }
   };
 

@@ -32,6 +32,22 @@ const courseManagementapi = baseApi.injectEndpoints({
         };
       },
     }),
+    addRegisteredSemester: builder.mutation({
+      query: (data) => ({
+        url: "/semester-registrations/create-semester-registration",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["semester"],
+    }),
+    updateRegisteredSemester: builder.mutation({
+      query: (args) => ({
+        url: `/semester-registrations/${args.id}`,
+        method: "PATCH",
+        body: args.data,
+      }),
+      invalidatesTags: ["semester"],
+    }),
     getAllCourses: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -56,21 +72,6 @@ const courseManagementapi = baseApi.injectEndpoints({
         };
       },
     }),
-    addRegisteredSemester: builder.mutation({
-      query: (data) => ({
-        url: "/semester-registrations/create-semester-registration",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    updateRegisteredSemester: builder.mutation({
-      query: (args) => ({
-        url: `/semester-registrations/${args.id}`,
-        method: "PATCH",
-        body: args.data,
-      }),
-      invalidatesTags: ["semester"],
-    }),
     addCourse: builder.mutation({
       query: (data) => ({
         url: `/courses/create-course`,
@@ -87,6 +88,20 @@ const courseManagementapi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["courses"],
     }),
+    getCourseFaculties: builder.query({
+      query: (id) => {
+        return {
+          url: `/courses/${id}/get-faculties`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response: TResponseRedux<any>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
     createOfferedCourse: builder.mutation({
       query: (data) => ({
         url: `offered-courses/create-offered-course`,
@@ -95,7 +110,7 @@ const courseManagementapi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["courses"],
     }),
-  }), //this end of endpoinst
+  }),
 });
 
 export const {
@@ -106,4 +121,5 @@ export const {
   useAddCourseMutation,
   useAddFacultiesMutation,
   useCreateOfferedCourseMutation,
+  useGetCourseFacultiesQuery,
 } = courseManagementapi;
