@@ -20,8 +20,8 @@ const Login = () => {
   // });
 
   const defaultValues = {
-    userId: "A-0002",
-    password: "admin123",
+    userId: "2025010001",
+    password: "student123",
   };
 
   const [login, { error }] = useLoginMutation();
@@ -41,14 +41,19 @@ const Login = () => {
       dispatch(setUser({ user: user, token: res.data.accessToken }));
       console.log(setUser({ user: user, token: res.data.accessToken }));
       toast.success("logged in", { id: toastId, duration: 2000 });
-      navigate(`/${user.role}/dashboard`);
-    } catch (error) {
-      toast.error("something that happend", { id: toastId });
+
+      if (res.data.needsPasswordChange) {
+        navigate(`/change-password`);
+      } else {
+        navigate(`/${user.role}/dashboard`);
+      }
+    } catch (err) {
+      toast.error("Something went wrong", { id: toastId, duration: 2000 });
     }
   };
   return (
     <Row justify="center" align="middle" style={{ height: "100vh" }}>
-      <PHForm onSubmit={onSubmit} defaultValues = {defaultValues}>
+      <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
         <div>
           {/* <label htmlFor="id">ID:</label> */}
           <PHInput type="text" name="userId" label="Id:"></PHInput>
